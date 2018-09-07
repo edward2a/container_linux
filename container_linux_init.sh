@@ -22,7 +22,8 @@ function getUserData(){
     # registryPassword=null
     # imageName=nginx
     # imageTag=mainline-alpine
-    # containerOptions='-p "80:80"'
+    # containerOptions='--net=host'
+    # containerPorts='80:80'
     # containerVars='-e VERBOSE=false'
     # containerVarSeparator=';'
     # loggingDriver=fluentd
