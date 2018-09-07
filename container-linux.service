@@ -1,0 +1,12 @@
+[Unit]
+Description=Container Linux Init
+After=network-online.target
+
+[Service]
+User=root
+Type=oneshot
+ExecStart=/usr/local/bin/container_linux_init.sh
+TimeoutSec=45
+
+[Install]
+WantedBy=multi-user.target
