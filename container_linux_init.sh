@@ -15,6 +15,7 @@ function checkUser() {
 
 function getUserData(){
     # Expected user-data model:
+    #
     # registryLogin=false
     # registryUrl=null
     # registryUser=null
@@ -23,6 +24,7 @@ function getUserData(){
     # imageTag=mainline-alpine
     # containerOptions='-p "80:80"'
     # containerVars='-e VERBOSE=false'
+    # containerVarSeparator=';'
     # loggingDriver=fluentd
     # loggingEndpoint=logz.example.com#
     # loggingOptions="--log-opt fluentd-address=${loggingEndpoint}"
@@ -51,14 +53,25 @@ function checkOldContainer(){
     fi
 }
 
+function processPorts(){
+    for port in ${containerPorts//,/ }; do echo -n "-p $port "; done
+}
+
+function processVariables(){
+    local IFS
+    IFS="${containerVarSeparator:-;}"
+    for var in ${containerVars}; do echo -n "-e ${var}"; done
+}
+
 function startContainer(){
     docker run -d \
         --log-driver=${loggingDriver} \
         --log-opt mode=non-blocking \
         --log-opt max-buffer-size=32m \
         ${loggingOptions} \
+        $(processPorts) \
         ${containerOptions} \
-        ${containerVars} \
+        "$(processVariables)" \
         --name ${imageName##*/}_${imageTag} \
         ${imageName}:${imageTag} || \
         die "Failed to start container."
@@ -73,3 +86,5 @@ registryLogin
 pullContainer
 checkOldContainer
 startContainer
+
+
