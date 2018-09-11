@@ -50,7 +50,7 @@ function pullContainer(){
 
 function checkOldContainer(){
     if $(docker ps -a -f "name=${imageName##*/}_${imageTag}" --format "{{.Names}}" | grep -q ${imageName##*/}_${imageTag}); then
-        docker rm -f ${imageName##*/}_${imageTag}
+        docker rm -v -f ${imageName##*/}_${imageTag}
     fi
 }
 
