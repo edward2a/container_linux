@@ -61,20 +61,20 @@ function processPorts(){
 function processVariables(){
     local IFS
     IFS="${containerVarSeparator:-;}"
-    for var in ${containerVars}; do echo -n "-e ${var}"; done
+    for var in ${containerVars}; do echo -n "-e '${var}' "; done
 }
 
 function startContainer(){
-    docker run -d \
+    eval `echo docker run -d \
         --log-driver=${loggingDriver} \
         --log-opt mode=non-blocking \
         --log-opt max-buffer-size=32m \
         ${loggingOptions} \
         $(processPorts) \
         ${containerOptions} \
-        "$(processVariables)" \
+        $(processVariables) \
         --name ${imageName##*/}_${imageTag} \
-        ${imageName}:${imageTag} || \
+        ${imageName}:${imageTag}` || \
         die "Failed to start container."
 }
 
