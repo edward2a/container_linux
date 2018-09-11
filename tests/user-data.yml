@@ -1,0 +1,30 @@
+---
+# Docker Registry
+registry:
+  login: false
+  url: null
+  user: null
+  password: null
+
+# Docker Image
+image:
+  name: nginx
+  tag: mainline-alpine
+
+# 
+container:
+  ports:
+  - 80:80
+  envVars:
+    VERBOSE: 'false'
+
+# System / Container
+logging:
+  endpoint: &loggingEndpoint logz.cloud.example.com
+  container:
+    driver: fluentd
+    options:
+      mode: non-blocking
+      max-buffer-size: 32m
+      fluentd-address: *loggingEndpoint
+...
