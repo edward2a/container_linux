@@ -1,0 +1,48 @@
+{
+  "variables": {
+    "SHARE_REGIONS": "eu-west-1"
+  },
+
+  "builders": [
+
+    { "name": "packer-aws-ebs",
+      "type": "amazon-ebs",
+      "region": "eu-west-1",
+      "ami_regions": "{{ user `SHARE_REGIONS` }}",
+      "source_ami_filter": {
+        "filters": {
+          "virtualization-type": "hvm",
+          "name": "ubuntu/images/*ubuntu-xenial-16.04-amd64-server-*",
+          "root-device-type": "ebs"
+        },
+        "owners": ["099720109477"],
+        "most_recent": true
+      },
+      "instance_type": "t3.micro",
+      "ssh_username": "ubuntu",
+      "ami_name": "container-linux-base-{{ isotime \"200601021504\" }}",
+      "ami_description": "container-linux-base",
+      "tags": {
+        "Name": "container-linux-base-{{ isotime \"200601021504\" }}",
+        "SourceImage": "{{ .SourceAMIName }}",
+        "OS": "Ubuntu",
+        "OS_Version": "16.04"
+      },
+      "run_tags": {
+        "Name": "container-linux-build-{{ isotime \"200601021504\" }}"
+      }
+    }
+
+  ],
+
+  "provisioners": [
+
+  ],
+
+  "post-processors": [
+    { "type": "manifest",
+      "output": "output/packer_manifest.json"
+    }
+  ]
+
+}
