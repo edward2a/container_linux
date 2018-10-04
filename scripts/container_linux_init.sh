@@ -24,7 +24,7 @@ function getUserData(){
     # imageTag=mainline-alpine
     # containerOptions='--net=host'
     # containerPorts='80:80'
-    # containerVars='-e VERBOSE=false'
+    # containerVars='VERBOSE=false\;STDOUT=true'
     # containerVarSeparator=';'
     # loggingDriver=fluentd
     # loggingEndpoint=logz.example.com#
