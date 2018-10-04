@@ -26,3 +26,13 @@ removal=(
 )
 
 apt-get remove -qq --purge ${removal[*]}
+
+# dnsmasq/resolvconf removal fix for resolv.conf
+if ifconfig eth0 &>/dev/null; then
+    dhclient eth0
+else
+    dhclient ens5
+fi
+ping -c1 -qn www.google.com &>/dev/null
+
+apt-get -qq dist-upgrade
