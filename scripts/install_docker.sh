@@ -7,7 +7,8 @@ add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(
 apt-get update
 apt-get -qq install docker-ce
 
-if [ -f $(dirname $0)/docker.login ]; then
-    source docker.login
+DOCKER_CREDS="$(dirname $0)/docker.login"
+if [ -f ${DOCKER_CREDS} ]; then
+    source ${DOCKER_CREDS}
     docker login -u ${DOCKER_USER} -p ${DOCKER_PASSWORD} ${DOCKER_REGISTRY}
 fi
