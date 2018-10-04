@@ -3,3 +3,6 @@
 
 # output
 output/
+
+# dynamically generated docker credentials
+docker.login
