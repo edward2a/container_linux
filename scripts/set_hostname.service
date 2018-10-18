@@ -1,0 +1,27 @@
+[Unit]
+Description=Set EC2 Instance ID as hostname on boot
+DefaultDependencies=no
+
+Wants=network-online.target
+Wants=dbus.service
+
+Before=td-agent-bit
+Before=cloud-init.target
+Before=sysinit.target
+Before=systemd-user-sessions.service
+
+After=systemd-networkd-wait-online.service
+After=networking.service
+After=network-online.target
+
+Conflicts=shutdown.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/set_hostname.sh
+RemainAfterExit=yes
+TimeoutSec=0
+StandardOutput=journal+console
+
+[Install]
+WantedBy=sysinit.target
