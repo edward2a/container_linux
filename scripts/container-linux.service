@@ -5,8 +5,10 @@ After=network-online.target
 [Service]
 User=root
 Type=oneshot
+RemainAfterExit=1
 ExecStart=/usr/local/bin/container_linux_init.sh
-TimeoutSec=90
+TimeoutSec=180
+StandardOutput=journal+console
 
 [Install]
 WantedBy=multi-user.target
