@@ -44,12 +44,7 @@
 
     { "type": "shell",
       "inline": [
-        "sudo bash /tmp/scripts/ubuntu_cleanup.sh",
-        "sudo -H bash /tmp/scripts/install_docker.sh",
-        "sudo cp -v /tmp/scripts/container_linux_init.sh /usr/local/bin/ && sudo chmod 755 /usr/local/bin/container_linux_init.sh",
-        "sudo cp -v /tmp/scripts/container-linux.service /lib/systemd/system/",
-        "sudo systemctl daemon-reload && sudo systemctl enable container-linux",
-        "sudo apt-get clean && sudo apt-get -qq autoremove --purge"
+        "sudo /bin/bash /tmp/scripts/container_linux_setup.sh"
       ]
     }
 
