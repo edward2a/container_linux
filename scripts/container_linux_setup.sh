@@ -5,11 +5,59 @@ SCRIPT=CL-Setup
 APT_OPTS="--no-install-recommends"
 SCRIPT_DIR=$(dirname $0)
 
+
 function die() {
     logger -p user.error -t ${SCRIPT} $1
     echo "ERROR: $1"
     exit 1
 }
+
+
+function ubuntu_setup() {
+
+    local removal
+
+    removal=(
+        command-not-found
+        command-not-found-data
+        python3-commandnotfound
+        dnsmasq
+        resolvconf
+        lxd
+        lxd-client
+        liblxc1
+        lxc-common
+        lxcfs
+        mlocate
+        nano
+        ntfs-3g
+        open-iscsi
+        open-vm-tools
+        pastebinit
+        popularity-contest
+        python3-distupgrade
+        snapd
+        sosreport
+        ubuntu-core-launcher
+        ufw
+    )
+
+    apt-get remove -qq --purge ${removal[*]}
+
+    # dnsmasq/resolvconf removal fix for resolv.conf
+    if ifconfig eth0 &>/dev/null; then
+        dhclient eth0
+    else
+        dhclient ens5
+    fi
+    ping -c1 -qn www.google.com &>/dev/null
+
+    # system upgrade to date
+    apt-get update
+    apt-get -qq dist-upgrade
+
+}
+
 
 function install_fluentbit() {
     curl -s https://packages.fluentbit.io/fluentbit.key | apt-key add -
@@ -20,6 +68,7 @@ function install_fluentbit() {
     # file input db cache location
     mkdir /var/cache/td-agent-bit
 }
+
 
 function configure_rsyslog() {
 
@@ -33,6 +82,7 @@ function configure_rsyslog() {
         return 1
     fi
 }
+
 
 function install_set_hostname() {
 
@@ -50,6 +100,7 @@ function install_set_hostname() {
     install -m 644 -o root -g root -D ${SCRIPT_DIR}/set_hostname/set_hostname.service /lib/systemd/system/
 }
 
+
 function install_docker() {
 
     curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
@@ -57,14 +108,16 @@ function install_docker() {
     apt-get update
     apt-get -qq install docker-ce
 
-    DOCKER_CREDS="$(dirname $0)/docker.login"
+    DOCKER_CREDS="${SCRIPT_DIR}/docker.login"
     if [ -f ${DOCKER_CREDS} ]; then
         source ${DOCKER_CREDS}
         docker login -u ${DOCKER_USER} -p ${DOCKER_PASSWORD} ${DOCKER_REGISTRY}
     fi
 }
 
+
 # MAIN
+ubuntu_setup
 install_fluentbit
 configure_rsyslog
 install_set_hostname
