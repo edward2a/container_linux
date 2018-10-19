@@ -74,6 +74,36 @@ EOF
 }
 
 ## Function begin
+function add_td_fwd_input() {
+
+cat<<EOF >>/etc/td-agent-bit/td-agent-bit.conf
+[INPUT]
+    Name forward
+    Listen 127.0.0.1
+    Port 24225
+    Buffer_Max_Size 128k
+    Buffer_Chunk_Size 32k
+
+EOF
+
+## Function end
+}
+
+## Function begin
+function add_filter_hostname_key() {
+
+cat<<EOF >>/etc/td-agent-bit/td-agent-bit.conf
+[FILTER]
+    Name record_modifier
+    Match *
+    Record hostname \${HOSTNAME}
+
+EOF
+
+## Function end
+}
+
+## Function begin
 function add_td_fwd_output() {
 
 local TargetForwarder
@@ -99,11 +129,30 @@ EOF
 }
 
 
+## Function begin
+function add_container_log_file_output() {
+
+cat<<EOF >>/etc/td-agent-bit/td-agent-bit.conf
+[OUTPUT]
+    # TODO update path to dynamic model https://github.com/fluent/fluent-bit/issues/604
+    Name file
+    Match c_id.*
+    Path /var/log/containers.log
+
+EOF
+
+## Function end
+}
+
+
 # main
 eval $(ec2metadata --user-data)
 new_td_config
 add_td_syslog_file_input
 add_td_auth_file_input
 add_td_cont_linux_journal_input
+add_td_fwd_input
+add_filter_hostname_key
 add_td_fwd_output ${loggingEndpoint}
+add_container_log_file_output
 
