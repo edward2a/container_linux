@@ -31,11 +31,6 @@ function getUserData(){
     eval $(/usr/bin/ec2metadata --user-data)
 }
 
-function configureLogging(){
-    # sed -i -e "s//${loggingEndpoint}/"
-    echo
-}
-
 function registryLogin(){
     if [[ ${registryLogin} == 'true' ]]; then
         docker login -u ${registryUser} -p ${registryPassword} ${registryUrl}
@@ -85,7 +80,6 @@ function startContainer(){
 ## MAIN
 checkUser
 getUserData
-configureLogging
 registryLogin
 pullContainer
 checkOldContainer
