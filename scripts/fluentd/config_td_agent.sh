@@ -95,7 +95,7 @@ function add_filter_hostname_key() {
 cat<<EOF >>/etc/td-agent-bit/td-agent-bit.conf
 [FILTER]
     Name record_modifier
-    Match *
+    Match **
     Record hostname \${HOSTNAME}
 
 EOF
@@ -117,7 +117,7 @@ fi
 cat<<EOF >>/etc/td-agent-bit/td-agent-bit.conf
 [OUTPUT]
     Name forward
-    Match *
+    Match **
     Host ${TargetForwarder}
     Port 24224
     #Shared_Key Som3R4nd0mExampl3key
