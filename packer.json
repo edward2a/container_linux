@@ -44,7 +44,7 @@
 
     { "type": "shell",
       "inline": [
-        "sudo /bin/bash /tmp/scripts/container_linux_setup.sh"
+        "sudo -H /bin/bash /tmp/scripts/container_linux_setup.sh"
       ]
     }
 
