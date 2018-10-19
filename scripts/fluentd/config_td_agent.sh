@@ -80,8 +80,8 @@ local TargetForwarder
 if [ -n "$1" ]; then
     TargetForwarder=$1
 else
-    echo "ERROR: No fluentd forward endpoint defined"
-    return 1
+    TargetForwarder="127.0.0.1"
+    echo "WARN: No fluentd forward endpoint defined, using ${TargetForwarder}"
 fi
 
 cat<<EOF >>/etc/td-agent-bit/td-agent-bit.conf
@@ -106,5 +106,4 @@ add_td_syslog_file_input
 add_td_auth_file_input
 add_td_cont_linux_journal_input
 add_td_fwd_output ${loggingEndpoint}
-
 
