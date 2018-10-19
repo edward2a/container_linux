@@ -24,11 +24,9 @@ function getUserData(){
     # imageTag=mainline-alpine
     # containerOptions='--net=host'
     # containerPorts='80:80'
-    # containerVars='VERBOSE=false\;STDOUT=true'
+    # containerVars=VERBOSE=false\;STDOUT=true
     # containerVarSeparator=';'
-    # loggingDriver=fluentd
     # loggingEndpoint=logz.example.com#
-    # loggingOptions="--log-opt fluentd-address=${loggingEndpoint}"
 
     eval $(/usr/bin/ec2metadata --user-data)
 }
@@ -66,10 +64,15 @@ function processVariables(){
 
 function startContainer(){
     eval `echo docker run -d \
-        --log-driver=${loggingDriver} \
+        --log-driver=fluentd \
+        --log-opt fluentd-address=127.0.0.1:24225 \
+        --log-opt fluentd-async-connect=true \
+        --log-opt fluentd-buffer-limit=32m \
+        --log-opt fluentd-max-retries=60 \
+        --log-opt fluentd-sub-second-precision=true \
         --log-opt mode=non-blocking \
         --log-opt max-buffer-size=32m \
-        ${loggingOptions} \
+        --log-opt tag="c_id.{{.ID}}" \
         $(processPorts) \
         ${containerOptions} \
         $(processVariables) \
