@@ -67,6 +67,9 @@ function install_fluentbit() {
 
     # file input db cache location
     mkdir /var/cache/td-agent-bit
+
+    systemctl enable td-agent-bit
+
 }
 
 
@@ -98,6 +101,9 @@ function install_set_hostname() {
 
     install -m 755 -o root -g root -D ${SCRIPT_DIR}/set_hostname/set_hostname.sh /usr/local/bin/
     install -m 644 -o root -g root -D ${SCRIPT_DIR}/set_hostname/set_hostname.service /lib/systemd/system/
+
+    systemctl enable set_hostname
+
 }
 
 
@@ -113,6 +119,9 @@ function install_docker() {
         source ${DOCKER_CREDS}
         docker login -u ${DOCKER_USER} -p ${DOCKER_PASSWORD} ${DOCKER_REGISTRY}
     fi
+
+    systemctl enable docker
+
 }
 
 
