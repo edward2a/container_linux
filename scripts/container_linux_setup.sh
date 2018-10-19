@@ -78,6 +78,7 @@ function install_fluentbit() {
     bash ${SCRIPT_DIR}/fluentd/config_td_agent.sh
     install -v -m 755 -o root -g root -D ${SCRIPT_DIR}/fluentd/fluentbit_output.sh /usr/local/bin/
     install -v -m 644 -o root -g root -D ${SCRIPT_DIR}/fluentd/fluentbit_output.service /lib/systemd/system/
+    install -v -m 644 -o root -g root -D ${SCRIPT_DIR}/fluentd/logrotate/container_logs /etc/logrotate.d/
 
 
     systemctl daemon-reload
