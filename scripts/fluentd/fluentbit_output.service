@@ -1,0 +1,18 @@
+[Unit]
+Description=Set FluentBit forwarder output host on boot
+DefaultDependencies=no
+
+Wants=network-online.target
+
+Before=td-agent-bit
+
+Conflicts=shutdown.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/fluentbit_output.sh
+RemainAfterExit=yes
+StandardOutput=journal+console
+
+[Install]
+WantedBy=sysinit.target

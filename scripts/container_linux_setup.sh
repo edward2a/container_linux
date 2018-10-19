@@ -69,7 +69,16 @@ function install_fluentbit() {
     # file input db cache location
     mkdir /var/cache/td-agent-bit
 
+    # configure and install boot time output updater
+    bash ${SCRIPT_DIR}/fluentd/config_td_agent.sh
+    install -m 755 -o root -g root -D ${SCRIPT_DIR}/fluentd/fluentbit_output.sh /usr/local/bin/
+    install -m 644 -o root -g root -D ${SCRIPT_DIR}/fluentd/fluentbit_output.service /lib/systemd/system/
+
+
+    systemctl daemon-reload
     systemctl enable td-agent-bit
+    systemctl enable fluentbit_output
+
 
 }
 
@@ -103,6 +112,7 @@ function install_set_hostname() {
     install -m 755 -o root -g root -D ${SCRIPT_DIR}/set_hostname/set_hostname.sh /usr/local/bin/
     install -m 644 -o root -g root -D ${SCRIPT_DIR}/set_hostname/set_hostname.service /lib/systemd/system/
 
+    systemctl daemon-reload
     systemctl enable set_hostname
 
 }
@@ -121,6 +131,7 @@ function install_docker() {
         docker login -u ${DOCKER_USER} -p ${DOCKER_PASSWORD} ${DOCKER_REGISTRY}
     fi
 
+    systemctl daemon-reload
     systemctl enable docker
 
 }
@@ -130,6 +141,7 @@ function install_container_linux() {
 
     install -m 755 -o root -g root -D ${SCRIPT_DIR}/container_linux/container_linux_init.sh /usr/local/bin
     install -m 644 -o root -g root -D ${SCRIPT_DIR}/container_linux/container_linux.service /lib/systemd/system/
+
     systemctl daemon-reload
     systemctl enable container_linux
 
