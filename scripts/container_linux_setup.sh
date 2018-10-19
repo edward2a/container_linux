@@ -116,9 +116,19 @@ function install_docker() {
 }
 
 
+function install_container_linux() {
+
+    install -m 755 -o root -g root -D ${SCRIPT_DIR}/container_linux/container_linux_init.sh /usr/local/bin
+    install -m 644 -o root -g root -D ${SCRIPT_DIR}/container_linux/container_linux.service /lib/systemd/system/
+    systemctl daemon-reload
+    systemctl enable container_linux
+
+}
+
 # MAIN
 ubuntu_setup
 install_fluentbit
 configure_rsyslog
 install_set_hostname
 install_docker
+install_container_linux
