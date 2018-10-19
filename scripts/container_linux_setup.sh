@@ -40,6 +40,7 @@ function ubuntu_setup() {
         sosreport
         ubuntu-core-launcher
         ufw
+        unattended-upgrades
     )
 
     apt-get remove -qq --purge ${removal[*]}
@@ -134,6 +135,14 @@ function install_container_linux() {
 
 }
 
+
+function final_cleanup() {
+    truncate --size=0 /var/log/syslog /var/log/*.log
+    rm -f /home/ubuntu/.ssh/authorized_keys /root/authorized_keys
+    apt-get clean && apt-get -qq autoremove --purge
+}
+
+
 # MAIN
 ubuntu_setup
 install_fluentbit
@@ -141,3 +150,4 @@ configure_rsyslog
 install_set_hostname
 install_docker
 install_container_linux
+final_cleanup
