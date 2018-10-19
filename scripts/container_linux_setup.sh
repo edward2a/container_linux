@@ -15,6 +15,8 @@ function die() {
 
 function ubuntu_setup() {
 
+    echo "INFO: Executing Ubuntu System Setup"
+
     local removal
 
     removal=(
@@ -61,6 +63,9 @@ function ubuntu_setup() {
 
 
 function install_fluentbit() {
+
+    echo "INFO: Executing FluentBit Install"
+
     curl -s https://packages.fluentbit.io/fluentbit.key | apt-key add -
     echo "deb http://packages.fluentbit.io/ubuntu xenial main" > /etc/apt/sources.list.d/fluentbit.list
     apt-get update
@@ -85,6 +90,8 @@ function install_fluentbit() {
 
 function configure_rsyslog() {
 
+    echo "INFO: Executing RSysLog Config"
+
     # Use syslog protocol 23 (similar to RFC5424)
     sed -i -e 's/^\$ActionFileDefaultTemplate RSYSLOG_TraditionalFileFormat/$ActionFileDefaultTemplate RSYSLOG_SyslogProtocol23Format/' /etc/rsyslog.conf
 
@@ -98,6 +105,8 @@ function configure_rsyslog() {
 
 
 function install_set_hostname() {
+
+    echo "INFO: Executing Set-Hostname Install"
 
     # Disable cloudinit's hostname config
     sed -i -e 's/^preserve_hostname: false$/preserve_hostname: true/' /etc/cloud/cloud.cfg
@@ -120,6 +129,8 @@ function install_set_hostname() {
 
 function install_docker() {
 
+    echo "INFO: Executing Docker Install"
+
     curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
     add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
     apt-get update
@@ -139,6 +150,8 @@ function install_docker() {
 
 function install_container_linux() {
 
+    echo "INFO: Executing Container-Linux Install"
+
     install -m 755 -o root -g root -D ${SCRIPT_DIR}/container_linux/container_linux_init.sh /usr/local/bin
     install -m 644 -o root -g root -D ${SCRIPT_DIR}/container_linux/container_linux.service /lib/systemd/system/
 
@@ -149,9 +162,13 @@ function install_container_linux() {
 
 
 function final_cleanup() {
-    truncate --size=0 /var/log/syslog /var/log/*.log
+
+    echo "INFO: Execufing Final Cleanup"
+
     rm -f /home/ubuntu/.ssh/authorized_keys /root/authorized_keys
     apt-get clean && apt-get -qq autoremove --purge
+    truncate --size=0 /var/log/syslog /var/log/*.log
+
 }
 
 
