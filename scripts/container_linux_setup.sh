@@ -111,9 +111,7 @@ function install_set_hostname() {
     # Disable cloudinit's hostname config
     sed -i -e 's/^preserve_hostname: false$/preserve_hostname: true/' /etc/cloud/cloud.cfg
 
-    if grep -q '^preserve_hostname: true$' /etc/cloud/cloud.cfg; then
-        return 0
-    else
+    if ! grep -q '^preserve_hostname: true$' /etc/cloud/cloud.cfg; then
         echo "ERROR: failed to disable cloudinit's hostname config"
         return 1
     fi
